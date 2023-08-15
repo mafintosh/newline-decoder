@@ -1,21 +1,19 @@
-const tape = require('tape')
-const NL = require('./')
+const test = require('brittle')
+const NL = require('.')
 
-tape('basic', function (t) {
+test('basic', function (t) {
   const nl = new NL()
 
-  t.same(nl.push('abe\nfest\ner\r\nsjov'), ['abe', 'fest', 'er'])
-  t.same(nl.end(), ['sjov'])
-  t.end()
+  t.alike(nl.push('abe\nfest\ner\r\nsjov'), ['abe', 'fest', 'er'])
+  t.alike(nl.end(), ['sjov'])
 })
 
-tape('basic chunked', function (t) {
+test('basic chunked', function (t) {
   const nl = new NL()
 
-  t.same(nl.push('abe\nfest\ner\r\nsjov'), ['abe', 'fest', 'er'])
-  t.same(nl.push('...'), [])
-  t.same(nl.push('!\r'), [])
-  t.same(nl.push('\n'), ['sjov...!'])
-  t.same(nl.end(), [])
-  t.end()
+  t.alike(nl.push('abe\nfest\ner\r\nsjov'), ['abe', 'fest', 'er'])
+  t.alike(nl.push('...'), [])
+  t.alike(nl.push('!\r'), [])
+  t.alike(nl.push('\n'), ['sjov...!'])
+  t.alike(nl.end(), [])
 })
