@@ -1,15 +1,15 @@
-const { StringDecoder } = require('string_decoder')
+const TextDecoder = require('text-decoder')
 
 module.exports = class NewlineDecoder {
   constructor (enc) {
-    this.decoder = new StringDecoder(enc || 'utf-8')
+    this.decoder = new TextDecoder(enc || 'utf-8')
     this.buffer = ''
   }
 
   push (data) {
     let pos = this.buffer.length
     if (typeof data === 'string') this.buffer += data
-    else this.buffer += this.decoder.write(data)
+    else this.buffer += this.decoder.push(data)
 
     pos = this.buffer.indexOf('\n', pos)
     const lines = []
@@ -23,7 +23,7 @@ module.exports = class NewlineDecoder {
   }
 
   end () {
-    const buf = this.buffer
+    const buf = this.buffer + this.decoder.end()
     this.buffer = ''
     return buf ? [buf] : []
   }
